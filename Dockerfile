@@ -15,7 +15,10 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM lipanski/docker-static-website:latest
+FROM busybox:musl
+RUN adduser -D app
+USER app
+WORKDIR /home/static
 COPY --from=builder /opt/app/build .
 EXPOSE 3000
-CMD ["/busybox", "httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
+CMD ["busybox", "httpd", "-f", "-v", "-p", "3000"]
